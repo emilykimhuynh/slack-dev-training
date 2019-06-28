@@ -5,6 +5,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
+const https = require('https');
 
 const environment = require('../../environment');
 var accessToken = environment.accessToken;
@@ -19,7 +20,7 @@ app.post('/event', function(request, response) {
   } else {
     var event = request.body.event;
     var type = event.type;
-        
+
     if(type == 'channel_created') {
       console.log('A new Channel was created');
     }
@@ -40,7 +41,7 @@ app.post('/event', function(request, response) {
 
   // HTTP request logic
   var chatPostRequest = https.request(options, function(chatPostResponse) {
-              
+
     chatPostResponse.setEncoding('utf8');
     var chatPostResponseBuffer = '';
     chatPostResponse.on('data', function(chatPostResponseData) {

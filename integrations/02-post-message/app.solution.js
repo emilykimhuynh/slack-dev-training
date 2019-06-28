@@ -13,14 +13,14 @@ var chatPostResponseChannelID = environment.chatPostResponseChannelID;
 
 app.post('/event-lastname', function(request, response) {
   var challenge = request.body.challenge;
-  if(typeof challenge!='undefined') {
+  if(typeof challenge != 'undefined') {
     // If the request contains a challenge its
     // a request from Slack to verify a URL
     response.send(challenge);
   } else {
     var event = request.body.event;
     var type = event.type;
-        
+
     if(type == 'channel_created') {
       console.log('A new Channel was created');            
     }
@@ -38,7 +38,7 @@ app.post('/event-lastname', function(request, response) {
       }
     };
     var chatPostRequest = https.request(options, function(chatPostResponse) {
-            
+
       chatPostResponse.setEncoding('utf8');
       var chatPostResponseBuffer = '';
       chatPostResponse.on('data', function(chatPostResponseData) {

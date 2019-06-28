@@ -20,7 +20,7 @@ app.post('/event-lastname', function(request, response) {
   } else {
     var event = request.body.event;
     var type = event.type;
-        
+ 
     if(type == 'channel_created') {
       console.log('A new Channel was created');            
     }
@@ -36,7 +36,7 @@ app.post('/event-lastname', function(request, response) {
       }
     };
     var chatPostRequest = https.request(options, function(chatPostResponse) {
-            
+  
       chatPostResponse.setEncoding('utf8');
       var chatPostResponseBuffer = '';
       chatPostResponse.on('data', function(chatPostResponseData) {
@@ -64,9 +64,11 @@ app.post('/event-lastname', function(request, response) {
 // Respond to slash command requests from Slack
 //Snippet 4
 app.post('/slash-command', function(request, response) {
-    
+
   var requestData = request.body;
-    
+
+  var city = (request.body.text != '') ? request.body.text : null; 
+
   response.setHeader('Content-Type', 'application/json');
   if(city != null) {
     var responseData = {

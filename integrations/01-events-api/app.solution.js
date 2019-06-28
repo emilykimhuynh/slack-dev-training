@@ -15,7 +15,7 @@ app.post('/event', function(request, response) {
   } else {
     var event = request.body.event;
     var type = event.type;
-        
+
     if(type == 'channel_created') {
       console.log('A new Channel was created');
     }
