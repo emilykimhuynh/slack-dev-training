@@ -20,7 +20,7 @@ app.post('/event', function(request, response) {
   } else {
     var event = request.body.event;
     var type = event.type;
-        
+
     if(type == 'channel_created') {
       console.log('A new Channel was created');            
     }
@@ -36,7 +36,7 @@ app.post('/event', function(request, response) {
       }
     };
     var chatPostRequest = https.request(options, function(chatPostResponse) {
-            
+
       chatPostResponse.setEncoding('utf8');
       var chatPostResponseBuffer = '';
       chatPostResponse.on('data', function(chatPostResponseData) {
@@ -64,14 +64,15 @@ app.post('/event', function(request, response) {
 // Respond to slash command requests from Slack
 //Snippet 4
 app.post('/slash-command', function(request, response) {
-    
+
   var requestData = request.body;
-    
+
   var city = (request.body.text != '') ? request.body.text : null;
-    
+  var responseData;
+
   response.setHeader('Content-Type', 'application/json');
   if(city != null) {
-    var responseData = {
+    responseData = {
       'text': `It's -1 degrees right now in ${city}`,
       'response_type': 'in_channel',
       'attachments': [
@@ -81,7 +82,7 @@ app.post('/slash-command', function(request, response) {
       ]
     };
   } else {
-    var responseData = {
+    responseData = {
       'text': 'Which city would you like a weather report for? ☀️⛄️☂️',
       'attachments': [
         {
@@ -106,7 +107,7 @@ app.post('/slash-command', function(request, response) {
   response.status(200).send(JSON.stringify(responseData));
 });
 app.post('/options-load-endpoint', function(request, response) {
-    
+
   response.setHeader('Content-Type', 'application/json');
   var responseData = {
     'options': [
@@ -127,7 +128,7 @@ app.post('/options-load-endpoint', function(request, response) {
   response.status(200).send(JSON.stringify(responseData));
 });
 app.post('/action-endpoint', function(request, response) {
-    
+
   response.setHeader('Content-Type', 'application/json');
   var payload = JSON.parse(request.body.payload);
   if(payload.callback_id == 'weather_city_callback') {
@@ -159,8 +160,6 @@ const blockKitSection = {
   ]
 };
 
-
-
 const blockKitDivider = {
   'response_type': 'in_channel',
   'blocks':[
@@ -179,9 +178,7 @@ const blockKitDivider = {
   ]
 };
 
-
-
-const blockKitSectionDatepicker= {
+const blockKitSectionDatepicker = {
   'response_type': 'in_channel',
   'blocks':[
     {
@@ -202,7 +199,8 @@ const blockKitSectionDatepicker= {
     }
   ]
 };
-const blockKitSectionImage={
+
+const blockKitSectionImage = {
   'response_type':'in_channel',
   'blocks':[
     {
@@ -220,45 +218,27 @@ const blockKitSectionImage={
   ]
 };
 
-
-
-
-
 app.post('/commands/block-kit', function(request, response) {
     
   response.setHeader('Content-Type', 'application/json; charset=utf8');
   console.log(request.body);
   var text = request.body.text;
   var data = {};
-  if(text == 'image') {
-    data = blockKitImage;
-  } else if(text == 'section') {
+  if(text == 'section') {
     data = blockKitSection;
-  } else if(text == 'fields') {
-    data = blockKitFields;
-  } else if(text == 'context') {
-    data = blockKitContext;
-  } else if(text == 'actions') {
-    data = blockKitActions;
   } else if(text == 'divider') {
     data = blockKitDivider;
-  } else if(text == 'section-overflow') {
-    data = blockKitSectionOverflow;
   } else if(text == 'section-datepicker') {
     data = blockKitSectionDatepicker;
   } else if(text == 'section-image'){
     data = blockKitSectionImage;
-  }else if(text == 'sectionbuttonmenu'){
-    data = blockKitButtonSelect;
-  }else {
+  } else {
     data = {
       'text': 'Unable to interpret command'
     };
   }
-    
   response.status(200).send(data);
 });
-
 
 // Respond to HTTP GET requests for the / URI
 app.get('/', function(request, response) {

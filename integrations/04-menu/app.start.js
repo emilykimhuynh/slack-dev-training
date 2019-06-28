@@ -20,7 +20,7 @@ app.post('/event-lastname', function(request, response) {
   } else {
     var event = request.body.event;
     var type = event.type;
- 
+
     if(type == 'channel_created') {
       console.log('A new Channel was created');            
     }
@@ -36,7 +36,7 @@ app.post('/event-lastname', function(request, response) {
       }
     };
     var chatPostRequest = https.request(options, function(chatPostResponse) {
-  
+
       chatPostResponse.setEncoding('utf8');
       var chatPostResponseBuffer = '';
       chatPostResponse.on('data', function(chatPostResponseData) {
@@ -67,11 +67,12 @@ app.post('/slash-command', function(request, response) {
 
   var requestData = request.body;
 
-  var city = (request.body.text != '') ? request.body.text : null; 
+  var city = (request.body.text != '') ? request.body.text : null;
+  var responseData;
 
   response.setHeader('Content-Type', 'application/json');
   if(city != null) {
-    var responseData = {
+    responseData = {
       'text': `It's -1 degrees right now in ${city}`,
       'response_type': 'in_channel',
       'attachments': [
@@ -81,7 +82,7 @@ app.post('/slash-command', function(request, response) {
       ]
     };
   } else {
-    var responseData = {
+    responseData = {
       'text': 'Which city would you like a weather report for? ☀️⛄️☂️',
       'attachments': [
         {
