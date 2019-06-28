@@ -7,8 +7,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 const https = require('https');
-var accessToken = 'xoxp-XXX';
-var chatPostResponseChannelID='CB85SUSGP';
+const environment = require('../../environment');
+var accessToken = environment.accessToken;
+var chatPostResponseChannelID = environment.chatPostResponseChannelID;
 
 app.post('/event-lastname', function(request, response) {
     var challenge = request.body.challenge;

@@ -6,6 +6,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+const environment = require('../../environment');
+var accessToken = environment.accessToken;
+var chatPostResponseChannelID = environment.chatPostResponseChannelID;
+
 app.post('/event', function(request, response) {
     var challenge = request.body.challenge;
     if(typeof challenge!='undefined') {
