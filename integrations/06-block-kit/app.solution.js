@@ -224,18 +224,14 @@ app.post('/commands/block-kit', function(request, response) {
   console.log(request.body);
   var text = request.body.text;
   var data = {};
-  if(text == 'section') {
-    data = blockKitSection;
-  } else if(text == 'divider') {
-    data = blockKitDivider;
-  } else if(text == 'section-datepicker') {
-    data = blockKitSectionDatepicker;
-  } else if(text == 'section-image'){
-    data = blockKitSectionImage;
-  } else {
-    data = {
-      'text': 'Unable to interpret command'
-    };
+  if (text == 'section') {
+      data = blockKitSection;
+  } else if (text == 'divider') {
+      data = blockKitDivider;
+  } else if (text == 'section-datepicker') {
+      data = blockKitSectionDatepicker;
+  } else if (text == 'section-image'){
+      data = blockKitSectionImage;
   }
   response.status(200).send(data);
 });
