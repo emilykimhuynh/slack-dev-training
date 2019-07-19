@@ -11,7 +11,7 @@ const environment = require('../../environment');
 var accessToken = environment.accessToken;
 var chatPostResponseChannelID = environment.chatPostResponseChannelID;
 
-app.post('/event-lastname', function(request, response) {
+app.post('/event', function(request, response) {
   var challenge = request.body.challenge;
   if(typeof challenge != 'undefined') {
     // If the request contains a challenge its
