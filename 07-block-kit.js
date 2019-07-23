@@ -11,6 +11,8 @@ const environment = require('../../environment');
 var accessToken = environment.accessToken;
 var chatPostResponseChannelID = environment.chatPostResponseChannelID;
 
+// Handle all Slack events here.
+// When a Slack event occurs, it makes a POST request to this endpoint.
 app.post('/event', function(request, response) {
   var challenge = request.body.challenge;
   if(typeof challenge!='undefined') {
@@ -20,11 +22,14 @@ app.post('/event', function(request, response) {
   } else {
     var event = request.body.event;
     var type = event.type;
+    console.log(`event is %o`, event);
 
     if(type == 'channel_created') {
       console.log('A new Channel was created');            
     }
     response.sendStatus(200);
+
+    // POST a message to the channel
     var options = {
       host : 'slack.com',
       port : 443,
@@ -35,6 +40,8 @@ app.post('/event', function(request, response) {
         'Content-Type' : 'application/json'
       }
     };
+
+    // Make HTTP request to Slack API
     var chatPostRequest = https.request(options, function(chatPostResponse) {
 
       chatPostResponse.setEncoding('utf8');
@@ -50,6 +57,7 @@ app.post('/event', function(request, response) {
       });
     });
 
+    // Construct data object to send to Slack
     var chatPostRequestData = {
       'channel': chatPostResponseChannelID,
       'text': `A new Channel called ${event.channel.name} was created`,
@@ -62,7 +70,6 @@ app.post('/event', function(request, response) {
 });
 
 // Respond to slash command requests from Slack
-//Snippet 4
 app.post('/slash-command', function(request, response) {
 
   var requestData = request.body;
@@ -71,6 +78,8 @@ app.post('/slash-command', function(request, response) {
   var responseData;
 
   response.setHeader('Content-Type', 'application/json');
+
+  // Construct data object to send to Slack
   if(city != null) {
     responseData = {
       'text': `It's -1 degrees right now in ${city}`,
@@ -106,6 +115,8 @@ app.post('/slash-command', function(request, response) {
   }
   response.status(200).send(JSON.stringify(responseData));
 });
+
+// Load menu options
 app.post('/options-load-endpoint', function(request, response) {
 
   response.setHeader('Content-Type', 'application/json');
@@ -127,6 +138,8 @@ app.post('/options-load-endpoint', function(request, response) {
   };
   response.status(200).send(JSON.stringify(responseData));
 });
+
+// Configure action endpoint for any interaction with message menus
 app.post('/action-endpoint', function(request, response) {
 
   response.setHeader('Content-Type', 'application/json');
@@ -146,11 +159,106 @@ app.post('/action-endpoint', function(request, response) {
   }
 });
 
-// Respond to HTTP GET requests for the / URI
+
+const blockKitSection = {
+  'response_type': 'in_channel',
+  'blocks': [
+    {
+      'type': 'section',
+      'text': {
+        'type': 'mrkdwn',
+        'text': 'This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~, and <https://google.com|this is a link>'
+      }
+    }
+  ]
+};
+
+const blockKitDivider = {
+  'response_type': 'in_channel',
+  'blocks':[
+    {
+      'type': 'context',
+      'elements': [
+        {
+          'type': 'mrkdwn',
+          'text': 'Last updated: Jan 1, 2019'
+        }
+      ]
+    },
+    {
+      'type': 'divider'
+    }
+  ]
+};
+
+const blockKitSectionDatepicker = {
+  'response_type': 'in_channel',
+  'blocks':[
+    {
+      'type': 'section',
+      'text': {
+        'type': 'mrkdwn',
+        'text': 'Pick a date for the deadline.'
+      },
+      'accessory': {
+        'type': 'datepicker',
+        'initial_date': '1990-04-28',
+        'placeholder': {
+          'type': 'plain_text',
+          'text': 'Select a date',
+          'emoji': true
+        }
+      }
+    }
+  ]
+};
+
+const blockKitSectionImage = {
+  'response_type':'in_channel',
+  'blocks':[
+    {
+      'type': 'section',
+      'text': {
+        'type': 'mrkdwn',
+        'text': 'Take a look at this image.'
+      },
+      'accessory': {
+        'type': 'image',
+        'image_url': 'https://api.slack.com/img/blocks/bkb_template_images/palmtree.png',
+        'alt_text': 'palm tree'
+      }
+    }
+  ]
+};
+
+// TODO: Enter Request URL endpoint that we configured 
+// in the Slack Config Dashboard
+// Slash command for Block Kit to call different Block Kit elements
+app.post('/{endpoint name}', function(request, response) {
+    
+  response.setHeader('Content-Type', 'application/json; charset=utf8');
+  console.log(request.body);
+  var text = request.body.text;
+  var data = {};
+  if (text == 'section') {
+      data = blockKitSection;
+  } else if (text == 'divider') {
+      data = blockKitDivider;
+  } else if (text == 'section-datepicker') {
+      data = blockKitSectionDatepicker;
+  } else if (text == 'section-image'){
+      data = blockKitSectionImage;
+  }
+  response.status(200).send(data);
+});
+
+// Respond to HTTP GET requests for the / URL
+// Display 'Hello World' in the browser
 app.get('/', function(request, response) {
   response.send('Hello World!');
 });
 
+// Start the Express web server, listening on port 3000
 app.listen(3000, function() {
   console.log('Hello World listening on port 3000');
 });
