@@ -102,7 +102,7 @@ app.post('/slash-command', function(request, response) {
           'actions': [
             {
               'name': 'weather_city_list',
-              'text': 'Which random bug do you want to resolve?',
+              'text': 'Which city?',
               'type': 'select',
               'data_source': 'external',
               'min_query_length': 1
