@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 const https = require('https');
 
-const environment = require('../../environment');
+const environment = require('./environment');
 var accessToken = environment.accessToken;
 var chatPostResponseChannelID = environment.chatPostResponseChannelID;
 
