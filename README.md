@@ -28,5 +28,5 @@ To run any app file:
 node 01-hello-world.js
 ```
 
-Optional: `npm install -g nodemon` and run `nodemon 01-hello-world.js`.
 
+**Note:** Don't forget to save your changes and *re-run* `node filename.js`. 😊
